@@ -21,7 +21,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/join", (req, res) => {
+  console.log(req.body);
   const sample = req.body.meetingInvite;
+  const closedcaptionapi = req.body.meetingCC;
   const meetingName = req.body.meetingName;
   const parser = zoomParser();
 
@@ -35,6 +37,7 @@ app.post("/join", (req, res) => {
           basePath: "https://api.symbl.ai",
         })
         .then(() => {
+          
           console.log("SDK Initialized");
           sdk
             .startEndpoint({
@@ -61,6 +64,34 @@ app.post("/join", (req, res) => {
             .then((connection) => {
               const connectionId = connection.connectionId;
               console.log("Successfully connected.", connectionId);
+              let sequenceID = 0
+              sdk.subscribeToConnection(connectionId, (data) => {
+                // console.log(data);
+                const {type} = data
+                //SequenceID to increment CC sequence for Zoom Closed Caption to work
+                const ccrequest = require('request')
+                if (type === 'transcript_response') {
+                  const {payload} = data
+                  //Vikram's Logic here
+                  //increment sequence ID logic
+                  sequenceID++      
+                  //Post to Zoom
+                  const options = {
+                    'method': 'POST',
+                    'url': closedcaptionapi+'&seq='+sequenceID,
+                    'headers':{
+                      'Content-Type': 'text/plain',
+                      'Accept': '*/*'
+                    },
+                    body: payload.content
+                  };
+                  ccrequest(options, function (error, response) {
+                    if (error) throw new Error(error);
+                    console.log(response.body);
+                  });
+                  console.log('Live: ' + payload && payload.content)
+                } 
+              })
               res.sendFile(path.join(__dirname + "/success.html"));
             })
             .catch((err) => {
