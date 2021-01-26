@@ -25,6 +25,8 @@ app.post("/join", (req, res) => {
   const sample = req.body.meetingInvite;
   const closedcaptionapi = req.body.meetingCC;
   const meetingName = req.body.meetingName;
+  appId = req.body.appid;
+  appSecret = req.body.appsecret;
   const parser = zoomParser();
 
   if (parser.isValid(sample)) {
@@ -32,8 +34,10 @@ app.post("/join", (req, res) => {
     result.then((data) => {
       sdk
         .init({
-          appId: process.env.APP_ID,
-          appSecret: process.env.APP_SECRET,
+          /*appId: process.env.APP_ID,
+          appSecret: process.env.APP_SECRET,*/
+          appId: req.body.appid,
+          appSecret: req.body.appsecret,
           basePath: "https://api.symbl.ai",
         })
         .then(() => {
