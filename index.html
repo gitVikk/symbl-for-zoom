@@ -36,6 +36,25 @@
         >
           <form action="/join" method="POST">
             <div class="form-group">
+              <label for="exampleFormControlSelect1">Symbl AppId(Dont have account? Sign up: https://platform.symbl.ai/#/signup)</label>
+              <input
+                type="text"
+                class="form-control"
+                id="appid"
+                name="appid"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Symbl AppSecret</label>
+              <input
+                type="password"
+                class="form-control"
+                id="appsecret"
+                name="appsecret"
+                required
+              />
+            <div class="form-group">
               <label for="exampleFormControlInput1">Email Address</label>
               <input
                 type="email"
@@ -45,6 +64,7 @@
                 placeholder="email@example.com"
                 required
               />
+            </div>
             </div>
             <div class="form-group">
               <label for="exampleFormControlSelect1">Meeting Name</label>
