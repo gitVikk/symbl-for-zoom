@@ -74,8 +74,12 @@ app.post("/join", (req, res) => {
                 
                 if (type === 'transcript_response') {
                   const {payload} = data
+                  //Trying the isFinal Flag to see if transcript is finalized
+                  //const { payload: { content }, isFinal } = data;
+                  
                   //SequenceID to increment CC sequence for Zoom Closed Caption to work
-                    sequenceID++ 
+                  //console.log('isFinal value:' + isFinal)
+                  sequenceID++ 
                     const options = {
                       'method': 'POST',
                       'url': closedcaptionapi+'&seq='+sequenceID,
@@ -84,13 +88,16 @@ app.post("/join", (req, res) => {
                         'Accept': '*/*'
                       },
                       body: payload.content
+                      //body: content 
+                      //console.log(`Transcription: ${content}, isFinal: ${isFinal}`);
                     };
                     ccrequest(options, function (error, response) {
                       if (error) throw new Error(error);
                       console.log(response.body);
                     });
                     console.log('Live: ' + payload.content + '\r');
-                  }
+                    //console.log('Live: ' + { content }, isFinal + '\r');
+                }
               })
               res.sendFile(path.join(__dirname + "/success.html"));
             })
