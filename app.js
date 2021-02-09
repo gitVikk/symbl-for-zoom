@@ -1,8 +1,7 @@
 /**
- * Sample inbound integration showing how to use Twilio Flex
- * with Symbl's websocket API as the inbound audio stream
+ * Sample inbound integration showing how to use Zoom Closed Captions
+ * with Symbl's Realtime Telephony API as an additional participant in the call
  */
-
 /* import necessary modules for the web-socket API */
 require("dotenv").config();
 const express = require("express");
@@ -34,9 +33,7 @@ app.post("/join", (req, res) => {
     result.then((data) => {
       sdk
         .init({
-          /*appId: process.env.APP_ID,
-          appSecret: process.env.APP_SECRET,*/
-          appId: req.body.appid,
+         appId: req.body.appid,
           appSecret: req.body.appsecret,
           basePath: "https://api.symbl.ai",
         })
@@ -68,33 +65,32 @@ app.post("/join", (req, res) => {
             .then((connection) => {
               const connectionId = connection.connectionId;
               console.log("Successfully connected.", connectionId);
+              console.log('Conversation ID:', connection.conversationId);
+              //Initialize CC Sequence counter for Zoom
               let sequenceID = 0
               sdk.subscribeToConnection(connectionId, (data) => {
-                // console.log(data);
                 const {type} = data
-                //SequenceID to increment CC sequence for Zoom Closed Caption to work
                 const ccrequest = require('request')
+                
                 if (type === 'transcript_response') {
                   const {payload} = data
-                  //Vikram's Logic here
-                  //increment sequence ID logic
-                  sequenceID++      
-                  //Post to Zoom
-                  const options = {
-                    'method': 'POST',
-                    'url': closedcaptionapi+'&seq='+sequenceID,
-                    'headers':{
-                      'Content-Type': 'text/plain',
-                      'Accept': '*/*'
-                    },
-                    body: payload.content
-                  };
-                  ccrequest(options, function (error, response) {
-                    if (error) throw new Error(error);
-                    console.log(response.body);
-                  });
-                  console.log('Live: ' + payload && payload.content)
-                } 
+                  //SequenceID to increment CC sequence for Zoom Closed Caption to work
+                    sequenceID++ 
+                    const options = {
+                      'method': 'POST',
+                      'url': closedcaptionapi+'&seq='+sequenceID,
+                      'headers':{
+                        'Content-Type': 'text/plain',
+                        'Accept': '*/*'
+                      },
+                      body: payload.content
+                    };
+                    ccrequest(options, function (error, response) {
+                      if (error) throw new Error(error);
+                      console.log(response.body);
+                    });
+                    console.log('Live: ' + payload.content + '\r');
+                  }
               })
               res.sendFile(path.join(__dirname + "/success.html"));
             })
