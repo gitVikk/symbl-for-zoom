@@ -1,6 +1,6 @@
-# Symbl Personal Assistant Meeting App
+# Symbl Personal Assistant Meeting App to add Closed Captions to Zoom
 
-This is a sample app that lets you invite Symbl to your zoom meeting by just pasting in the meeting invite
+This is a sample app that lets you invite Symbl to your zoom meeting by just pasting in the meeting invite and to add closed captions to Zoom.
 
 
 ### sample web app (local version)
