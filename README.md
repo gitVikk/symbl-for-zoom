@@ -2,6 +2,7 @@
 
 This is a sample app that lets you invite Symbl to your zoom meeting by just pasting in the meeting invite and to add closed captions to Zoom.
 
+Here is the deployed version of this code on Heroku: https://symbl-zoom-captions.herokuapp.com/
 
 ### sample web app (local version)
 ```javascript
